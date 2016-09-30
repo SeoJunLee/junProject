@@ -9,8 +9,23 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
+
+
+
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+        if (config('database.default') !== 'sqlite') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        }
+
+        $this->call(UsersTableSeeder::class);
+
+        App\Article::truncate();
+        factory(App\Article::class, 10)->create();
+        $this->command->info('Seeded : Article table');
+
+        if (config('database.default') !== 'sqlite') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        }
     }
 }
